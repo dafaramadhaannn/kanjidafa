@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Belajar Kanji (1 - 613) — Flashcard & Kuis</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Aplikasi Belajar Kanji (No. 1 - 613)</h1>
+    <nav class="tabs">
+      <button class="tab-btn active" data-tab="daftar">Daftar & Pilih Kanji</button>
+      <button class="tab-btn" data-tab="flashcard">Flashcard 3D</button>
+      <button class="tab-btn" data-tab="kuis">Kuis Acak</button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- PANEL FILTER GLOBAL -->
+    <section class="filter-bar">
+      <div class="range-group">
+        <label>Rentang Nomor: 
+          <input type="number" id="range-start" min="1" max="613" value="1"> s/d 
+          <input type="number" id="range-end" min="1" max="613" value="613">
+        </label>
+        <button id="btn-apply-range" class="btn-secondary">Terapkan Rentang</button>
+        <button id="btn-select-all" class="btn-secondary">Pilih Semua (613)</button>
+        <button id="btn-unselect-all" class="btn-secondary">Hapus Centang</button>
+      </div>
+      <div class="filter-info">
+        Terpilih: <strong id="selected-count">613</strong> kata
+      </div>
+    </section>
+
+    <!-- TAB 1: DAFTAR KANJI -->
+    <section id="tab-daftar" class="tab-content active">
+      <div class="search-box">
+        <input type="text" id="search-input" placeholder="Cari kanji, hiragana, romaji, arti, atau nomor...">
+      </div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th><input type="checkbox" id="check-visible" title="Centang yang tampil di halaman ini"></th>
+              <th>No</th>
+              <th>Kanji</th>
+              <th>Cara Baca</th>
+              <th>Romaji</th>
+              <th>Arti</th>
+            </tr>
+          </thead>
+          <tbody id="kanji-table-body"></tbody>
+        </table>
+      </div>
+
+      <!-- PAGINASI PER 10 KATA -->
+      <div class="pagination-bar">
+        <button id="btn-page-prev" class="btn-secondary">&larr; Sebelumnya</button>
+        <span id="page-info">Hal 1 dari 62</span>
+        <button id="btn-page-next" class="btn-secondary">Selanjutnya &rarr;</button>
+      </div>
+    </section>
+
+    <!-- TAB 2: FLASHCARD 3D -->
+    <section id="tab-flashcard" class="tab-content">
+      <div class="fc-controls">
+        <label>Sisi Depan:
+          <select id="fc-front-mode">
+            <option value="kanji">Kanji saja</option>
+            <option value="kanji-kana">Kanji + Cara Baca</option>
+            <option value="meaning">Arti (Indonesia)</option>
+            <option value="romaji">Romaji</option>
+          </select>
+        </label>
+        <button id="btn-fc-shuffle" class="btn-secondary">Acak Kartu</button>
+        <span id="fc-counter">1 / 613</span>
+      </div>
+
+      <div class="flashcard-scene" id="flashcard-scene">
+        <div class="flashcard" id="flashcard">
+          <div class="card-face card-front" id="card-front"></div>
+          <div class="card-face card-back" id="card-back"></div>
+        </div>
+      </div>
+
+      <div class="fc-nav">
+        <button id="btn-fc-prev" class="btn-primary">&larr; Sebelumnya</button>
+        <button id="btn-fc-flip" class="btn-secondary">Balik Kartu (Spasi)</button>
+        <button id="btn-fc-next" class="btn-primary">Selanjutnya &rarr;</button>
+      </div>
+    </section>
+
+    <!-- TAB 3: KUIS ACAK -->
+    <section id="tab-kuis" class="tab-content">
+      <div class="quiz-setup" id="quiz-setup">
+        <h2>Pengaturan Kuis</h2>
+        <div class="setup-grid">
+          <label>Tipe Kuis:
+            <select id="quiz-type">
+              <option value="mc">Pilihan Ganda</option>
+              <option value="text">Input Teks (Ketik Jawaban)</option>
+            </select>
+          </label>
+          <label>Soal Ditampilkan:
+            <select id="quiz-question-mode">
+              <option value="kanji-to-meaning">Kanji &rarr; Tebak Arti</option>
+              <option value="kanji-to-reading">Kanji &rarr; Tebak Cara Baca / Romaji</option>
+              <option value="meaning-to-kanji">Arti &rarr; Tebak Kanji</option>
+            </select>
+          </label>
+          <label>Jumlah Soal:
+            <input type="number" id="quiz-limit" min="1" max="613" value="20">
+          </label>
+        </div>
+        <button id="btn-start-quiz" class="btn-primary">Mulai Kuis</button>
+      </div>
+
+      <div class="quiz-area hidden" id="quiz-area">
+        <div class="quiz-header">
+          <span id="quiz-progress">Soal 1 / 20</span>
+          <span id="quiz-score">Skor: 0</span>
+        </div>
+        <div class="quiz-prompt" id="quiz-prompt"></div>
+        <div class="quiz-subprompt" id="quiz-subprompt"></div>
+
+        <div id="quiz-mc-options" class="mc-options"></div>
+
+        <div id="quiz-text-box" class="text-box hidden">
+          <input type="text" id="quiz-text-input" placeholder="Ketik jawaban (Romaji / Hiragana / Arti)..." autocomplete="off">
+          <button id="btn-submit-text" class="btn-primary">Jawab</button>
+        </div>
+
+        <div id="quiz-feedback" class="quiz-feedback"></div>
+        <button id="btn-next-question" class="btn-secondary hidden">Soal Berikutnya &rarr;</button>
+      </div>
+
+      <div class="quiz-result hidden" id="quiz-result">
+        <h2>Hasil Kuis</h2>
+        <p id="final-score-text"></p>
+        <div id="wrong-answers-list"></div>
+        <button id="btn-restart-quiz" class="btn-primary">Ulangi Kuis</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
